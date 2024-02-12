@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class UserChannelCtxMap {
 
     /**
-     *  维护userId和ctx的关联关系，格式:Map<userId,map<terminal，ctx>>
+     *  维护userId和ctx的关联关系，格式:Map<userId,map<terminal,ctx>>
      */
     private static final Map<Long, Map<Integer, ChannelHandlerContext>> channelMap = new ConcurrentHashMap<>();
 

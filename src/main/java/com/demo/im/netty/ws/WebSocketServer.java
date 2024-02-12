@@ -1,5 +1,6 @@
 package com.demo.im.netty.ws;
 
+import com.demo.im.netty.IMAuthHandler;
 import com.demo.im.netty.IMEntryPointChannelHandler;
 import com.demo.im.netty.IMServer;
 import com.demo.im.netty.ws.endecode.MessageProtocolDecoder;
@@ -14,6 +15,7 @@ import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
 import io.netty.handler.timeout.IdleStateHandler;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -27,6 +29,9 @@ public class WebSocketServer implements IMServer {
 
     @Value("${websocket.port}")
     private int port;
+
+    @Autowired
+    private IMAuthHandler imAuthHandler;
 
     private volatile boolean ready = false;
 
@@ -51,10 +56,12 @@ public class WebSocketServer implements IMServer {
                     protected void initChannel(Channel ch) {
                         // 获取职责链
                         ChannelPipeline pipeline = ch.pipeline();
+                        // 120秒
                         pipeline.addLast(new IdleStateHandler(120, 0, 0, TimeUnit.SECONDS));
                         pipeline.addLast("http-codec", new HttpServerCodec());
                         pipeline.addLast("aggregator", new HttpObjectAggregator(65535));
                         pipeline.addLast("http-chunked", new ChunkedWriteHandler());
+                        pipeline.addLast(imAuthHandler);
                         pipeline.addLast(new WebSocketServerProtocolHandler("/im"));
                         pipeline.addLast("encode", new MessageProtocolEncoder());
                         pipeline.addLast("decode", new MessageProtocolDecoder());

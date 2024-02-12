@@ -32,7 +32,7 @@ public class HeartbeatProcessor implements AbstractMessageProcessor<IMHeartbeatI
         sendInfo.setCmd(IMCmdType.HEART_BEAT.code());
         ctx.channel().writeAndFlush(sendInfo);
 
-        // 设置属性 (TODO app后台 连接断开，重新发送的心跳，没有经过loginProcessor，需要自定义统一token handler)
+        // 设置属性 (app后台 连接断开，重新发送的心跳，没有经过loginProcessor，定义统一token handler IMAuthHandler)
         AttributeKey<Long> heartBeatAttr = AttributeKey.valueOf(ChannelAttrKey.HEARTBEAT_TIMES);
         Long heartbeatTimes = ctx.channel().attr(heartBeatAttr).get();
         ctx.channel().attr(heartBeatAttr).set(++heartbeatTimes);

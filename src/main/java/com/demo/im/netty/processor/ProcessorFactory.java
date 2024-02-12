@@ -10,9 +10,9 @@ public class ProcessorFactory {
     public static AbstractMessageProcessor createProcessor(IMCmdType cmd) {
         AbstractMessageProcessor processor = null;
         switch (cmd) {
-            case LOGIN:
-                processor = SpringContextHolder.getApplicationContext().getBean(LoginProcessor.class);
-                break;
+//            case LOGIN:
+//                processor = SpringContextHolder.getApplicationContext().getBean(LoginProcessor.class);
+//                break;
             case HEART_BEAT:
                 processor = SpringContextHolder.getApplicationContext().getBean(HeartbeatProcessor.class);
                 break;
