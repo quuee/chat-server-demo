@@ -9,6 +9,7 @@ public class UserChannelCtxMap {
 
     /**
      *  维护userId和ctx的关联关系，格式:Map<userId,map<terminal,ctx>>
+     *  netty服务的客户端 channel 都是存在本地的 自定义 map 或者 netty 提供的 ChannelGroup 里面
      */
     private static final Map<Long, Map<Integer, ChannelHandlerContext>> channelMap = new ConcurrentHashMap<>();
 

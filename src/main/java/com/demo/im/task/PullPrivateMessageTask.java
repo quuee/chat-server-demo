@@ -28,7 +28,7 @@ public class PullPrivateMessageTask extends AbstractPullMessageTask {
     @Override
     public void pullMessage() {
         // 从redis拉取未读消息
-        String key = String.join(":", IMRedisKey.IM_MESSAGE_PRIVATE_UNREAD_QUEUE);
+        String key = String.join(":", IMRedisKey.IM_MESSAGE_PRIVATE_UNREAD_QUEUE, IMServersLaunch.serverId+"");
         LinkedHashMap messageMap = (LinkedHashMap) redisTemplate.opsForList().leftPop(key);
         while (!Objects.isNull(messageMap)) {
             IMMessageInfo receiveInfo = objectMapper.convertValue(messageMap, IMMessageInfo.class);
