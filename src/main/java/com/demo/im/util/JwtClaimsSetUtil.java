@@ -14,7 +14,7 @@ public class JwtClaimsSetUtil {
     public JWTClaimsSet buildJWTClaimsSet(String userId,Integer terminal) {
         Calendar signTime = Calendar.getInstance();
         Date signTimeTime = signTime.getTime();
-        signTime.add(Calendar.MINUTE, 60*24);
+        signTime.add(Calendar.MINUTE, 60*24*7);
         Date expireTime = signTime.getTime();
         return new JWTClaimsSet.Builder()
                 .issuer("http://192.168.1.100:41000")

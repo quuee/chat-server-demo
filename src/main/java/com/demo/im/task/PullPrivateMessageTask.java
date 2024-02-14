@@ -1,0 +1,38 @@
+package com.demo.im.task;
+
+
+import com.demo.im.common.IMRedisKey;
+import com.demo.im.common.enums.IMCmdType;
+import com.demo.im.model.IMMessageInfo;
+import com.demo.im.netty.IMServersLaunch;
+import com.demo.im.netty.processor.AbstractMessageProcessor;
+import com.demo.im.netty.processor.ProcessorFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Component;
+
+import java.util.Objects;
+
+@Slf4j
+@Component
+@RequiredArgsConstructor
+public class PullPrivateMessageTask extends AbstractPullMessageTask {
+
+    private final RedisTemplate<String, Object> redisTemplate;
+
+    @Override
+    public void pullMessage() {
+        // 从redis拉取未读消息
+        String key = String.join(":", IMRedisKey.IM_MESSAGE_PRIVATE_UNREAD_QUEUE, IMServersLaunch.serverId + "");
+        IMMessageInfo receiveInfo = (IMMessageInfo) redisTemplate.opsForList().leftPop(key);
+
+        while (!Objects.isNull(receiveInfo)) {
+            log.error("拉取消息 推送到客户端，发送者:{},接收者:{}，内容:{}", receiveInfo.getSender().getUserId(), receiveInfo.getReceivers().get(0).getUserId(), receiveInfo.getData());
+            AbstractMessageProcessor processor = ProcessorFactory.createProcessor(IMCmdType.PRIVATE_MESSAGE);
+            processor.process(receiveInfo);
+            // 下一条消息
+            receiveInfo = (IMMessageInfo) redisTemplate.opsForList().leftPop(key);
+        }
+    }
+}

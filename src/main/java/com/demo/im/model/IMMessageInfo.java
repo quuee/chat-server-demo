@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class IMRecvInfo {
+public class IMMessageInfo {
 
     /**
      * 命令类型 IMCmdType
@@ -25,12 +25,14 @@ public class IMRecvInfo {
     /**
      * 是否需要回调发送结果
      */
-    private Boolean sendResult;
+//    private Boolean sendResult;
 
     /**
      * 当前服务名（回调发送结果使用）
      */
-    private String serviceName;
+//    private String serviceName;
+
+    private String messageTime;
     /**
      * 推送消息体
      */

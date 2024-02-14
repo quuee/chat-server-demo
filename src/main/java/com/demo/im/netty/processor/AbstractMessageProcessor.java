@@ -2,13 +2,15 @@ package com.demo.im.netty.processor;
 
 import io.netty.channel.ChannelHandlerContext;
 
-public interface AbstractMessageProcessor<T> {
+public abstract class AbstractMessageProcessor<T> {
 
-    public void process(ChannelHandlerContext ctx, T data);
+    public void process(ChannelHandlerContext ctx, T data){}
 
-//    public void process(T data);
+    public void process(T data){}
 
-    public T transForm(Object o);
+    public T transForm(Object o) {
+        return (T) o;
+    }
 
 
 }

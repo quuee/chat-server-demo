@@ -82,9 +82,10 @@ public class IMAuthHandler extends ChannelInboundHandlerAdapter {
             // 初始化心跳次数
             AttributeKey<Long> heartBeatAttr = AttributeKey.valueOf(ChannelAttrKey.HEARTBEAT_TIMES);
             ctx.channel().attr(heartBeatAttr).set(0L);
-            // 在redis上记录每个user的channelId，15秒没有心跳，则自动过期
+
+            // 在redis上记录每个user的channelId，n秒没有心跳，则自动过期
             String key = String.join(":", IMRedisKey.IM_USER_SERVER_ID, userId.toString(), terminal.toString());
-            redisTemplate.opsForValue().set(key, IMServersLaunch.machineId, IMConstant.ONLINE_TIMEOUT_SECOND, TimeUnit.SECONDS);
+            redisTemplate.opsForValue().set(key, IMServersLaunch.serverId, IMConstant.ONLINE_TIMEOUT_SECOND, TimeUnit.SECONDS);
 
             ctx.pipeline().remove(this);
 

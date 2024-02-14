@@ -7,19 +7,19 @@ public final class IMRedisKey {
     /**
      * im-server最大id,从0开始递增
      */
-    public static final String  IM_MAX_SERVER_ID = "im:max_server_id";
+    public static final String  IM_MAX_SERVER_ID = "im<max_server_id>";
     /**
      * 用户ID所连接的IM-server的ID
      */
-    public static final String  IM_USER_SERVER_ID = "im:user:server_id";
+    public static final String  IM_USER_SERVER_ID = "im<server_id>:user:terminal";
     /**
      * 未读私聊消息队列
      */
-    public static final String IM_MESSAGE_PRIVATE_QUEUE = "im:message:private";
+    public static final String IM_MESSAGE_PRIVATE_UNREAD_QUEUE = "im:message:private:unread";
     /**
      * 未读群聊消息队列
      */
-    public static final String IM_MESSAGE_GROUP_QUEUE = "im:message:group";
+    public static final String IM_MESSAGE_GROUP_UNREAD_QUEUE = "im:message:group:unread";
     /**
      * 私聊消息发送结果队列
      */

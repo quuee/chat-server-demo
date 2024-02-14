@@ -5,7 +5,6 @@ import com.demo.im.common.ChannelAttrKey;
 import com.demo.im.common.IMConstant;
 import com.demo.im.common.IMRedisKey;
 import com.demo.im.common.enums.IMCmdType;
-import com.demo.im.model.IMHeartbeatInfo;
 import com.demo.im.model.IMMessageWrapper;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.util.AttributeKey;
@@ -20,12 +19,12 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class HeartbeatProcessor implements AbstractMessageProcessor<IMHeartbeatInfo> {
+public class HeartbeatProcessor extends AbstractMessageProcessor<IMMessageWrapper> {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
     @Override
-    public void process(ChannelHandlerContext ctx, IMHeartbeatInfo beatInfo) {
+    public void process(ChannelHandlerContext ctx, IMMessageWrapper beatInfo) {
         log.info("接收心跳");
         // 响应ws
         IMMessageWrapper sendInfo = new IMMessageWrapper();
@@ -37,7 +36,7 @@ public class HeartbeatProcessor implements AbstractMessageProcessor<IMHeartbeatI
         Long heartbeatTimes = ctx.channel().attr(heartBeatAttr).get();
         ctx.channel().attr(heartBeatAttr).set(++heartbeatTimes);
         if (heartbeatTimes % 10 == 0) {
-            // 每心跳10次，用户在线状态续一次命
+            // 每心跳10次，用户在线状态续一次命 (客户端每30秒发送一次，总时间不能超过设定的时间)
             AttributeKey<Long> userIdAttr = AttributeKey.valueOf(ChannelAttrKey.USER_ID);
             Long userId = ctx.channel().attr(userIdAttr).get();
             AttributeKey<Integer> terminalAttr = AttributeKey.valueOf(ChannelAttrKey.TERMINAL_TYPE);
@@ -48,8 +47,8 @@ public class HeartbeatProcessor implements AbstractMessageProcessor<IMHeartbeatI
     }
 
     @Override
-    public IMHeartbeatInfo transForm(Object o) {
+    public IMMessageWrapper transForm(Object o) {
         HashMap map = (HashMap) o;
-        return BeanUtil.fillBeanWithMap(map, new IMHeartbeatInfo(), false);
+        return BeanUtil.fillBeanWithMap(map, new IMMessageWrapper(), false);
     }
 }
