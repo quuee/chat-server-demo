@@ -59,16 +59,9 @@ public class PrivateMessageProcessor extends AbstractMessageProcessor<IMMessageI
     private void sendUnReadQueue(IMMessageInfo recvInfo){
         // 暂时发一个终端
 
-        // 获取对方连接的channelId
-        String key = String.join(":", IMRedisKey.IM_USER_SERVER_ID, recvInfo.getReceivers().get(0).getUserId().toString(), IMTerminalType.APP.code().toString());
-        // 注意，每个客户端注册的serverId不一致就不会存入redis。必须先启动服务，再注册客户端
-        Integer serverId = (Integer)redisTemplate.opsForValue().get(key);
-        if(!ObjectUtils.isEmpty(serverId)){
-            String sendKey = String.join(":", IMRedisKey.IM_MESSAGE_PRIVATE_UNREAD_QUEUE, serverId.toString());
-            // 存入redis 等待拉取推送
-            redisTemplate.opsForList().rightPush(sendKey, recvInfo);
-        }
-
+        String sendKey = String.join(":", IMRedisKey.IM_MESSAGE_PRIVATE_UNREAD_QUEUE);
+        // 存入redis 等待拉取推送
+        redisTemplate.opsForList().rightPush(sendKey, recvInfo);
     }
 
     @Override

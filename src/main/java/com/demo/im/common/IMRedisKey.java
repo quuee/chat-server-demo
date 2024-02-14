@@ -10,6 +10,7 @@ public final class IMRedisKey {
     public static final String  IM_MAX_SERVER_ID = "im<max_server_id>";
     /**
      * 用户ID所连接的IM-server的ID
+     * 目前主要用来给用户在线状态续命
      */
     public static final String  IM_USER_SERVER_ID = "im<server_id>:user:terminal";
     /**
