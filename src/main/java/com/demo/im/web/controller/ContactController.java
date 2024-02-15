@@ -1,6 +1,5 @@
 package com.demo.im.web.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.demo.im.common.Result;
 import com.demo.im.web.model.UserDO;
 import com.demo.im.web.service.UserService;
@@ -26,7 +25,6 @@ public class ContactController {
     // 联系人列表
     @RequestMapping(value = "list",method = RequestMethod.GET)
     public Result<List<UserDO>> list(@RequestParam Long userId){
-
 
         List<UserDO> userDOS = userService.contactList(userId);
         return Result.ok(userDOS);

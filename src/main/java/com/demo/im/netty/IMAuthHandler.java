@@ -4,7 +4,10 @@ import com.demo.im.common.ChannelAttrKey;
 import com.demo.im.common.IMConstant;
 import com.demo.im.common.IMRedisKey;
 import com.demo.im.common.enums.IMCmdType;
+import com.demo.im.common.enums.IMTerminalType;
+import com.demo.im.config.redisConfig.RedisMq;
 import com.demo.im.model.IMMessageWrapper;
+import com.demo.im.util.RedisStreamUtil;
 import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jwt.SignedJWT;
 import io.netty.channel.ChannelHandler;
@@ -18,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -36,6 +40,12 @@ public class IMAuthHandler extends ChannelInboundHandlerAdapter {
 
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
+
+    @Autowired
+    private RedisStreamUtil redisStreamUtil;
+
+    @Autowired
+    private RedisMq redisMq;
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -93,6 +103,14 @@ public class IMAuthHandler extends ChannelInboundHandlerAdapter {
             IMMessageWrapper<Object> sendInfo = new IMMessageWrapper<>();
             sendInfo.setCmd(IMCmdType.LOGIN.code());
             ctx.channel().writeAndFlush(sendInfo);
+
+            // 发送用户登录通知，推送未读消息
+            // 判断是否有未读消息
+            String unreadMessageKey = String.join(":", IMRedisKey.IM_MESSAGE_PRIVATE_UNREAD_QUEUE,userId.toString(), terminal.toString());
+            if(redisTemplate.hasKey(unreadMessageKey)){
+                redisStreamUtil.addMap(redisMq.getStreams().get(0).getName(), Map.of("USER",String.join(":",userId.toString(),terminal.toString())));
+            }
+
 
             // 传递消息至下一个处理器
             ctx.fireChannelRead(msg);

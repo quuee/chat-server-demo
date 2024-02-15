@@ -27,7 +27,7 @@ public class PrivateMessageProcessor extends AbstractMessageProcessor<IMMessageI
         process(recvInfo);
     }
 
-    public void process(IMMessageInfo receiveInfo){
+    public void process(IMMessageInfo receiveInfo) {
         log.info("接收到私聊消息，{}", receiveInfo);
         IMUserInfo sender = receiveInfo.getSender();
         IMUserInfo receiver = receiveInfo.getReceivers().get(0);
@@ -47,7 +47,7 @@ public class PrivateMessageProcessor extends AbstractMessageProcessor<IMMessageI
             } else {
                 log.error("未找到channel，发送者:{},接收者:{}，内容:{}", sender.getUserId(), receiver.getUserId(), receiveInfo.getData());
                 // 如果对方不在线，将消息存入缓存或数据库中，等下次对方连接服务器，将消息推送
-                sendUnReadQueue(receiveInfo);
+                pushUnReadQueue(receiveInfo);
             }
         } catch (Exception e) {
             // 消息推送失败确认
@@ -56,19 +56,25 @@ public class PrivateMessageProcessor extends AbstractMessageProcessor<IMMessageI
         }
     }
 
-    private void sendUnReadQueue(IMMessageInfo recvInfo){
+    private void pushUnReadQueue(IMMessageInfo recvInfo) {
         // 暂时只APP端
 
         // 获取对方连接的(所在的服务器severId)
-        String key = String.join(":", IMRedisKey.IM_USER_SERVER_ID, recvInfo.getReceivers().get(0).getUserId().toString(), IMTerminalType.APP.code().toString());
+        // 但是对方都没有上线，根本无法获取
+//        String key = String.join(":", IMRedisKey.IM_USER_SERVER_ID, recvInfo.getReceivers().get(0).getUserId().toString(), IMTerminalType.APP.code().toString());
         // 注意，必须先启动服务，再注册客户端。
         // 每个客户端连接不同的服务器，需要找到对应的服务器获取channel 才能发送到达。
-        Integer serverId = (Integer)redisTemplate.opsForValue().get(key);
-        if(!ObjectUtils.isEmpty(serverId)){
-            String sendKey = String.join(":", IMRedisKey.IM_MESSAGE_PRIVATE_UNREAD_QUEUE, serverId.toString());
-            // 存入redis 等待拉取推送
-            redisTemplate.opsForList().rightPush(sendKey, recvInfo);
-        }
+//        Integer serverId = (Integer) redisTemplate.opsForValue().get(key);
+//        if (!ObjectUtils.isEmpty(serverId)) {
+//            String sendKey = String.join(":", IMRedisKey.IM_MESSAGE_PRIVATE_UNREAD_QUEUE, serverId.toString());
+//            // 存入redis 等待拉取推送
+//            redisTemplate.opsForList().rightPush(sendKey, recvInfo);
+//        }
+
+        // 思路1：按用户id为key存储未读消息，当用户登录时 用消息中间件 通知用户所在的服务器推送消息
+        String sendKey = String.join(":", IMRedisKey.IM_MESSAGE_PRIVATE_UNREAD_QUEUE,recvInfo.getReceivers().get(0).getUserId().toString(),IMTerminalType.APP.code().toString());
+        // 存入redis 等待拉取推送
+        redisTemplate.opsForList().rightPush(sendKey, recvInfo);
 
     }
 

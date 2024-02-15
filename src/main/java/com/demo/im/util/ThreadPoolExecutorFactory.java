@@ -48,10 +48,10 @@ public final class ThreadPoolExecutorFactory {
     /**
      * 重写readResolve方法
      */
-    private Object readResolve() {
-        //重写readResolve方法，防止序列化破坏单例
-        return ThreadPoolExecutorFactory.getThreadPoolExecutor();
-    }
+//    private Object readResolve() {
+//        //重写readResolve方法，防止序列化破坏单例
+//        return ThreadPoolExecutorFactory.getThreadPoolExecutor();
+//    }
 
     /**
      * 双检锁创建线程安全的单例

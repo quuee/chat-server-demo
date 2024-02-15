@@ -33,6 +33,9 @@ public class WebSocketServer implements IMServer {
     @Autowired
     private IMAuthHandler imAuthHandler;
 
+    @Autowired
+    private IMEntryPointChannelHandler imEntryPointChannelHandler;
+
     private volatile boolean ready = false;
 
     private EventLoopGroup bossGroup;
@@ -65,7 +68,7 @@ public class WebSocketServer implements IMServer {
                         pipeline.addLast(new WebSocketServerProtocolHandler("/im"));
                         pipeline.addLast("encode", new MessageProtocolEncoder());
                         pipeline.addLast("decode", new MessageProtocolDecoder());
-                        pipeline.addLast("handler", new IMEntryPointChannelHandler());
+                        pipeline.addLast("handler", imEntryPointChannelHandler);
                     }
                 })
                 // bootstrap 还可以设置TCP参数，根据需要可以分别设置主线程池和从线程池参数，来优化服务端性能。

@@ -65,3 +65,24 @@ mybatis-plus:
     prefix:
     blobType: BLOB
     boolValue: TRUE
+
+redis:
+  mq:
+    streams:
+      # key名称
+      - name:  IM:UNREAD:PUSH:PRIVATE
+        groups:
+          # 消费组名称
+          - name: PRIVATE-MESSAGE-GROUP
+            # 消费者名称
+            consumers: PRIVATE-MESSAGE-GROUP-A
+      # key2
+#      - name: RARSP:REPORT:READ:BLC
+#        groups:
+#          - name: BLC_GROUP
+#            consumers: BLC-CONSUMER-A,BLC-CONSUMER-B
+      # key3
+#      - name: RARSP:REPORT:READ:HD
+#        groups:
+#          - name: HD_GROUP
+#            consumers: HD-CONSUMER-A,HD-CONSUMER-B
