@@ -15,8 +15,13 @@ public final class IMRedisKey {
     public static final String  IM_USER_SERVER_ID = "im<server_id>:user:terminal";
     /**
      * 未读私聊消息队列
+     * 等待接收方用户上线推送
      */
     public static final String IM_MESSAGE_PRIVATE_UNREAD_QUEUE = "im:message:private:unread";
+    /**
+     * 只是单纯作为Map的key，用户取user
+     */
+    public static final String IM_USER = "im:user";
     /**
      * 未读群聊消息队列
      */

@@ -3,8 +3,7 @@ package com.demo.im.netty;
 import com.demo.im.common.ChannelAttrKey;
 import com.demo.im.common.IMConstant;
 import com.demo.im.common.IMRedisKey;
-import com.demo.im.common.enums.IMCmdType;
-import com.demo.im.common.enums.IMTerminalType;
+import com.demo.im.common.enums.IMConversationType;
 import com.demo.im.config.redisConfig.RedisMq;
 import com.demo.im.model.IMMessageWrapper;
 import com.demo.im.util.RedisStreamUtil;
@@ -76,7 +75,7 @@ public class IMAuthHandler extends ChannelInboundHandlerAdapter {
             if (context != null && !ctx.channel().id().equals(context.channel().id())) {
                 // 不允许多地登录,强制下线
                 IMMessageWrapper<Object> sendInfo = new IMMessageWrapper<>();
-                sendInfo.setCmd(IMCmdType.FORCE_LOGOUT.code());
+                sendInfo.setConversationType(IMConversationType.FORCE_LOGOUT.code());
                 sendInfo.setData("您已在其他地方登陆，将被强制下线");
                 context.channel().writeAndFlush(sendInfo);
                 log.info("异地登录，强制下线,userId:{}", userId);
@@ -101,14 +100,15 @@ public class IMAuthHandler extends ChannelInboundHandlerAdapter {
 
             // 响应ws
             IMMessageWrapper<Object> sendInfo = new IMMessageWrapper<>();
-            sendInfo.setCmd(IMCmdType.LOGIN.code());
+            sendInfo.setConversationType(IMConversationType.HEART_BEAT.code());
             ctx.channel().writeAndFlush(sendInfo);
 
             // 发送用户登录通知，推送未读消息
             // 判断是否有未读消息
             String unreadMessageKey = String.join(":", IMRedisKey.IM_MESSAGE_PRIVATE_UNREAD_QUEUE,userId.toString(), terminal.toString());
             if(redisTemplate.hasKey(unreadMessageKey)){
-                redisStreamUtil.addMap(redisMq.getStreams().get(0).getName(), Map.of("USER",String.join(":",userId.toString(),terminal.toString())));
+                // redisMq.getStreams().get(0).getName() = key name IM:UNREAD:PUSH:PRIVATE
+                redisStreamUtil.addMap(redisMq.getStreams().get(0).getName(), Map.of(IMRedisKey.IM_USER,String.join(":",userId.toString(),terminal.toString())));
             }
 
 

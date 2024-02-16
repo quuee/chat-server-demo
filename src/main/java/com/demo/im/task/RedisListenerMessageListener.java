@@ -1,8 +1,7 @@
 package com.demo.im.task;
 
 import com.demo.im.common.IMRedisKey;
-import com.demo.im.common.enums.IMCmdType;
-import com.demo.im.common.enums.IMTerminalType;
+import com.demo.im.common.enums.IMConversationType;
 import com.demo.im.config.redisConfig.RedisMq;
 import com.demo.im.model.IMMessageInfo;
 import com.demo.im.netty.processor.AbstractMessageProcessor;
@@ -48,16 +47,16 @@ public class RedisListenerMessageListener implements StreamListener<String, MapR
         // 消息内容
         Map<String, String> msg = message.getValue();
 
-        log.debug("streamKey:{},recordId:{},msg:{}",streamKey,recordId,msg);
-        String userString = msg.get("USER");
+        log.info("streamKey:{},recordId:{},msg:{}",streamKey,recordId,msg);
+        String userString = msg.get(IMRedisKey.IM_USER);
         String[] split = userString.split(":");// userId:terminal
         // 逻辑
         String key = String.join(":", IMRedisKey.IM_MESSAGE_PRIVATE_UNREAD_QUEUE,split[0], split[1]);
         LinkedHashMap messageMap = (LinkedHashMap) redisTemplate.opsForList().leftPop(key);
         if(!ObjectUtils.isEmpty(messageMap)){
             IMMessageInfo receiveInfo = objectMapper.convertValue(messageMap, IMMessageInfo.class);
-            log.debug("拉取消息 推送到客户端，发送者:{},接收者:{}，内容:{}", receiveInfo.getSender().getUserId(), receiveInfo.getReceivers().get(0).getUserId(), receiveInfo.getData());
-            AbstractMessageProcessor processor = ProcessorFactory.createProcessor(IMCmdType.PRIVATE_MESSAGE);
+            log.info("拉取消息 推送到客户端，发送者:{},接收者:{}，内容:{}", receiveInfo.getSender().getUserId(), receiveInfo.getReceivers().get(0).getUserId(), receiveInfo.getContent());
+            AbstractMessageProcessor processor = ProcessorFactory.createProcessor(IMConversationType.PRIVATE_MESSAGE);
             processor.process(receiveInfo);
 
             // ack

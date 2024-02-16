@@ -8,9 +8,9 @@ import java.util.List;
 public class IMMessageInfo {
 
     /**
-     * 命令类型 IMCmdType
+     * 会话类型
      */
-    private Integer cmd;
+    private Integer conversationType;
 
     /**
      * 发送方
@@ -32,11 +32,20 @@ public class IMMessageInfo {
      */
 //    private String serviceName;
 
-    private String messageTime;
+    private String contentTime;
     /**
      * 推送消息体
      */
-    private Object data;
+    private Object content;
+
+    /**
+     * 消息类型 文本 图片 声音
+     */
+    private Integer contentType;
+
+    private Object image;
+
+    private Object sound;
 }
 
 

@@ -4,7 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.demo.im.common.ChannelAttrKey;
 import com.demo.im.common.IMConstant;
 import com.demo.im.common.IMRedisKey;
-import com.demo.im.common.enums.IMCmdType;
+import com.demo.im.common.enums.IMConversationType;
 import com.demo.im.model.IMMessageWrapper;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.util.AttributeKey;
@@ -28,7 +28,7 @@ public class HeartbeatProcessor extends AbstractMessageProcessor<IMMessageWrappe
         log.info("接收心跳");
         // 响应ws
         IMMessageWrapper sendInfo = new IMMessageWrapper();
-        sendInfo.setCmd(IMCmdType.HEART_BEAT.code());
+        sendInfo.setConversationType(IMConversationType.HEART_BEAT.code());
         ctx.channel().writeAndFlush(sendInfo);
 
         // 设置属性 (app后台 连接断开，重新发送的心跳，没有经过loginProcessor，定义统一token handler IMAuthHandler)

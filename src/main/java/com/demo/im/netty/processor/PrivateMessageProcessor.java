@@ -2,7 +2,7 @@ package com.demo.im.netty.processor;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.demo.im.common.IMRedisKey;
-import com.demo.im.common.enums.IMCmdType;
+import com.demo.im.common.enums.IMConversationType;
 import com.demo.im.common.enums.IMTerminalType;
 import com.demo.im.model.*;
 import com.demo.im.netty.UserChannelCtxMap;
@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ObjectUtils;
 
 import java.util.HashMap;
 
@@ -40,18 +39,18 @@ public class PrivateMessageProcessor extends AbstractMessageProcessor<IMMessageI
 
                 // 推送消息到目标用户
                 IMMessageWrapper<Object> resultInfo = new IMMessageWrapper<>();
-                resultInfo.setCmd(IMCmdType.PRIVATE_MESSAGE.code());
+                resultInfo.setConversationType(IMConversationType.PRIVATE_MESSAGE.code());
                 resultInfo.setData(receiveInfo);
 
                 channelCtx.channel().writeAndFlush(resultInfo);
             } else {
-                log.error("未找到channel，发送者:{},接收者:{}，内容:{}", sender.getUserId(), receiver.getUserId(), receiveInfo.getData());
+                log.error("未找到channel，发送者:{},接收者:{}，内容:{}", sender.getUserId(), receiver.getUserId(), receiveInfo.getContent());
                 // 如果对方不在线，将消息存入缓存或数据库中，等下次对方连接服务器，将消息推送
                 pushUnReadQueue(receiveInfo);
             }
         } catch (Exception e) {
             // 消息推送失败确认
-            log.error("发送异常，发送者:{},接收者:{}，内容:{}", sender.getUserId(), receiver.getUserId(), receiveInfo.getData(), e);
+            log.error("发送异常，发送者:{},接收者:{}，内容:{}", sender.getUserId(), receiver.getUserId(), receiveInfo.getContent(), e);
 
         }
     }

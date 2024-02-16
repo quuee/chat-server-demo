@@ -1,13 +1,13 @@
 package com.demo.im.netty.processor;
 
 
-import com.demo.im.common.enums.IMCmdType;
+import com.demo.im.common.enums.IMConversationType;
 import com.demo.im.util.SpringContextHolder;
 
 
 public class ProcessorFactory {
 
-    public static AbstractMessageProcessor createProcessor(IMCmdType cmd) {
+    public static AbstractMessageProcessor createProcessor(IMConversationType cmd) {
         AbstractMessageProcessor processor = null;
         switch (cmd) {
 //            case LOGIN:

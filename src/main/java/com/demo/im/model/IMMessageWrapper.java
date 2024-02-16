@@ -5,9 +5,9 @@ import lombok.Data;
 @Data
 public class IMMessageWrapper<T> {
     /**
-     * 命令
+     * 会话类型
      */
-    private Integer cmd;
+    private Integer conversationType;
 
     /**
      * 推送消息体

@@ -2,12 +2,10 @@ package com.demo.im.netty;
 
 import com.demo.im.common.ChannelAttrKey;
 import com.demo.im.common.IMRedisKey;
-import com.demo.im.common.enums.IMCmdType;
-import com.demo.im.config.redisConfig.RedisMq;
+import com.demo.im.common.enums.IMConversationType;
 import com.demo.im.model.IMMessageWrapper;
 import com.demo.im.netty.processor.AbstractMessageProcessor;
 import com.demo.im.netty.processor.ProcessorFactory;
-import com.demo.im.util.RedisStreamUtil;
 import com.demo.im.util.SpringContextHolder;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -16,11 +14,9 @@ import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.AttributeKey;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
 
 /**
  * WebSocket 长连接下 文本帧的处理器
@@ -36,7 +32,7 @@ public class IMEntryPointChannelHandler extends SimpleChannelInboundHandler<IMMe
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, IMMessageWrapper imMessageWrapper) throws Exception {
         log.info("IMEntryPointChannelHandler 接收的内容：{}", imMessageWrapper);
         // 创建处理器进行处理
-        AbstractMessageProcessor processor = ProcessorFactory.createProcessor(IMCmdType.fromCode(imMessageWrapper.getCmd()));
+        AbstractMessageProcessor processor = ProcessorFactory.createProcessor(IMConversationType.fromCode(imMessageWrapper.getConversationType()));
         processor.process(channelHandlerContext,processor.transForm(imMessageWrapper.getData()));
 
 
