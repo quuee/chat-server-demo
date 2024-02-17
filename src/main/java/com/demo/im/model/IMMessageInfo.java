@@ -43,9 +43,9 @@ public class IMMessageInfo {
      */
     private Integer contentType;
 
-    private Object image;
+    private ImageInfo image;
 
-    private Object sound;
+    private SoundInfo sound;
 }
 
 

@@ -29,7 +29,7 @@ public class RedisStreamConfig {
     @Autowired
     private RedisStreamUtil redisStreamUtil;
     @Autowired
-    private RedisMq redisMq;
+    private RedisMqProperties redisMqProperties;
     @Autowired
     private RedisListenerMessageListener redisListenerMessageListener;
 
@@ -58,16 +58,16 @@ public class RedisStreamConfig {
                         // .errorHandler()
                         .build();
 
-        for (RedisMqStream redisMqStream : redisMq.getStreams()) {
-            String streamName = redisMqStream.getName();
-            RedisMqGroup redisMqGroup = redisMqStream.getGroups().get(0);
+        for (RedisMqStreamProperties redisMqStreamProperties : redisMqProperties.getStreams()) {
+            String streamName = redisMqStreamProperties.getName();
+            RedisMqGroupProperties redisMqGroupProperties = redisMqStreamProperties.getGroups().get(0);
 
-            initStream(streamName, redisMqGroup.getName());
+            initStream(streamName, redisMqGroupProperties.getName());
 
             var listenerContainer = StreamMessageListenerContainer.create(factory, options);
             // 手动ask消息
             Subscription subscription = listenerContainer.receive(
-                    Consumer.from(redisMqGroup.getName(), redisMqGroup.getConsumers()[0]),
+                    Consumer.from(redisMqGroupProperties.getName(), redisMqGroupProperties.getConsumers()[0]),
                     StreamOffset.create(streamName, ReadOffset.lastConsumed()),
                     redisListenerMessageListener);
             // 自动ask消息

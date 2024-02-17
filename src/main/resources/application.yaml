@@ -86,3 +86,8 @@ redis:
 #        groups:
 #          - name: HD_GROUP
 #            consumers: HD-CONSUMER-A,HD-CONSUMER-B
+
+minio:
+  endpoint: http://192.168.1.7:9000
+  account: wuhou
+  password: wuhoumusic321

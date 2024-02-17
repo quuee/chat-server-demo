@@ -3,7 +3,7 @@ package com.demo.im.config.redisConfig;
 import lombok.Data;
 
 @Data
-public class RedisMqGroup {
+public class RedisMqGroupProperties {
 
     private String name;
 

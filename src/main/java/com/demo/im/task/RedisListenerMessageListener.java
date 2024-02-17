@@ -2,7 +2,7 @@ package com.demo.im.task;
 
 import com.demo.im.common.IMRedisKey;
 import com.demo.im.common.enums.IMConversationType;
-import com.demo.im.config.redisConfig.RedisMq;
+import com.demo.im.config.redisConfig.RedisMqProperties;
 import com.demo.im.model.IMMessageInfo;
 import com.demo.im.netty.processor.AbstractMessageProcessor;
 import com.demo.im.netty.processor.ProcessorFactory;
@@ -28,7 +28,7 @@ import java.util.Map;
 public class RedisListenerMessageListener implements StreamListener<String, MapRecord<String,String,String>> {
 
     @Autowired
-    private RedisMq redisMq;
+    private RedisMqProperties redisMqProperties;
     @Autowired
     private RedisStreamUtil redisStreamUtil;
 
@@ -60,7 +60,7 @@ public class RedisListenerMessageListener implements StreamListener<String, MapR
             processor.process(receiveInfo);
 
             // ack
-            redisStreamUtil.ack(streamKey,redisMq.getStreams().get(0).getGroups().get(0).getName(),recordId.getValue());
+            redisStreamUtil.ack(streamKey, redisMqProperties.getStreams().get(0).getGroups().get(0).getName(),recordId.getValue());
             redisStreamUtil.del(streamKey,recordId.getValue());
         }
 

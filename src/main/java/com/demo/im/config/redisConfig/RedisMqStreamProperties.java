@@ -5,9 +5,9 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class RedisMqStream {
+public class RedisMqStreamProperties {
 
     public String name;
-    public List<RedisMqGroup> groups;
+    public List<RedisMqGroupProperties> groups;
 
 }

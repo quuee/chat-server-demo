@@ -4,7 +4,7 @@ import com.demo.im.common.ChannelAttrKey;
 import com.demo.im.common.IMConstant;
 import com.demo.im.common.IMRedisKey;
 import com.demo.im.common.enums.IMConversationType;
-import com.demo.im.config.redisConfig.RedisMq;
+import com.demo.im.config.redisConfig.RedisMqProperties;
 import com.demo.im.model.IMMessageWrapper;
 import com.demo.im.util.RedisStreamUtil;
 import com.nimbusds.jose.JWSVerifier;
@@ -44,7 +44,7 @@ public class IMAuthHandler extends ChannelInboundHandlerAdapter {
     private RedisStreamUtil redisStreamUtil;
 
     @Autowired
-    private RedisMq redisMq;
+    private RedisMqProperties redisMqProperties;
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
@@ -108,7 +108,7 @@ public class IMAuthHandler extends ChannelInboundHandlerAdapter {
             String unreadMessageKey = String.join(":", IMRedisKey.IM_MESSAGE_PRIVATE_UNREAD_QUEUE,userId.toString(), terminal.toString());
             if(redisTemplate.hasKey(unreadMessageKey)){
                 // redisMq.getStreams().get(0).getName() = key name IM:UNREAD:PUSH:PRIVATE
-                redisStreamUtil.addMap(redisMq.getStreams().get(0).getName(), Map.of(IMRedisKey.IM_USER,String.join(":",userId.toString(),terminal.toString())));
+                redisStreamUtil.addMap(redisMqProperties.getStreams().get(0).getName(), Map.of(IMRedisKey.IM_USER,String.join(":",userId.toString(),terminal.toString())));
             }
 
 

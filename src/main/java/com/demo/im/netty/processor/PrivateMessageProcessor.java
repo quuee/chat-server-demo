@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.demo.im.common.IMRedisKey;
 import com.demo.im.common.enums.IMConversationType;
 import com.demo.im.common.enums.IMTerminalType;
+import com.demo.im.config.minioConfig.MinioProperties;
 import com.demo.im.model.*;
 import com.demo.im.netty.UserChannelCtxMap;
 import io.netty.channel.ChannelHandlerContext;
@@ -20,6 +21,8 @@ import java.util.HashMap;
 public class PrivateMessageProcessor extends AbstractMessageProcessor<IMMessageInfo> {
 
     private final RedisTemplate<String, Object> redisTemplate;
+
+    private final MinioProperties minioProperties;
 
     @Override
     public void process(ChannelHandlerContext ctx, IMMessageInfo recvInfo) {
