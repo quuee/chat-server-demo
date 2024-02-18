@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.InputStream;
+
 
 @RestController
 @RequestMapping("upload")
@@ -20,20 +20,39 @@ public class UploadController {
     @Autowired
     private MinioUtil minioUtil;
 
-    @RequestMapping(value = "images",method = RequestMethod.POST)
-    public Result imageFileUpload(@RequestParam("files") List<MultipartFile> files) {
-        boolean exists = minioUtil.bucketExists("images");
-        List<String> temp = new ArrayList<>(files.size());
-        if(exists){
-            for (MultipartFile file : files) {
-                ObjectWriteResponse response = minioUtil.uploadFile(file, "images");
-                String imageUrl = minioUtil.getPresignedObjectUrl("images", response.object(), null, null);
-                temp.add(imageUrl);
+    @RequestMapping(value = "file", method = RequestMethod.POST)
+    public Result imageFileUpload(@RequestParam("file") MultipartFile file,
+                                  @RequestParam("filename") String filename,
+                                  @RequestParam("mimeType") String mimeType) {
+        boolean exists = false;
+        String buketName="";
+        if(mimeType.equals("image")){
+            buketName = "images";
+            exists = minioUtil.bucketExists(buketName);
+            if (!exists) {
+                minioUtil.createBucket(buketName);
             }
-
-            return Result.ok(temp);
+        }else if(mimeType.equals("audio")){
+            buketName = "voices";
+            exists = minioUtil.bucketExists(buketName);
+            if (!exists) {
+                minioUtil.createBucket(buketName);
+            }
+//            ObjectWriteResponse response = minioUtil.uploadFile(file, buketName);
+//            InputStream in = minioUtil.downloadFile(buketName,response.object());
+//            return Result.ok(in);
+        }else if(mimeType.equals("video")){
+            buketName = "videos";
+            exists = minioUtil.bucketExists(buketName);
+            if (!exists) {
+                minioUtil.createBucket(buketName);
+            }
         }
-        return Result.error("文件存储服务器错误");
+        ObjectWriteResponse response = minioUtil.uploadFile(file, buketName);
+        String fileUrl = minioUtil.getPresignedObjectUrl(buketName, response.object(), null, null);
+//        return Result.ok("http://192.168.1.7:9000/"+buketName+"/"+response.object());
+        return Result.ok(fileUrl);
+
 
 
     }
