@@ -49,9 +49,9 @@ public class UploadController {
             }
         }
         ObjectWriteResponse response = minioUtil.uploadFile(file, buketName);
-        String fileUrl = minioUtil.getPresignedObjectUrl(buketName, response.object(), null, null);
-//        return Result.ok("http://192.168.1.7:9000/"+buketName+"/"+response.object());
-        return Result.ok(fileUrl);
+//        String fileUrl = minioUtil.getPresignedObjectUrl(buketName, response.object(), null, null);
+        return Result.ok("http://192.168.1.7:9000/"+buketName+"/"+response.object());
+//        return Result.ok(fileUrl);
 
 
 
