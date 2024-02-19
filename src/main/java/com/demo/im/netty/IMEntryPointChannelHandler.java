@@ -35,8 +35,6 @@ public class IMEntryPointChannelHandler extends SimpleChannelInboundHandler<IMMe
         AbstractMessageProcessor processor = ProcessorFactory.createProcessor(IMConversationType.fromCode(imMessageWrapper.getConversationType()));
         processor.process(channelHandlerContext,processor.transForm(imMessageWrapper.getData()));
 
-
-
     }
 
     /**

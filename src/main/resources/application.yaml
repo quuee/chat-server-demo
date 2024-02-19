@@ -82,10 +82,10 @@ redis:
             # 消费者名称
             consumers: PRIVATE-MESSAGE-GROUP-A
       # key2
-#      - name: RARSP:REPORT:READ:BLC
+#      - name: IM:UNREAD:PUSH:GROUP
 #        groups:
-#          - name: BLC_GROUP
-#            consumers: BLC-CONSUMER-A,BLC-CONSUMER-B
+#          - name: GROUP-MESSAGE-GROUP
+#            consumers: GROUP-MESSAGE-GROUP-A
       # key3
 #      - name: RARSP:REPORT:READ:HD
 #        groups:

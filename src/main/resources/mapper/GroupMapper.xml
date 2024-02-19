@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.demo.im.web.dao.GroupDOMapper">
+
+    <!-- 群 成员 一对多 -->
+    <resultMap id="groupAndMembers" type="com.demo.im.web.model.GroupDO">
+        <id column="group_id" property="groupId"/>
+        <result column="group_name" property="groupName"/>
+        <result column="group_avatar_url" property="groupAvatarUrl"/>
+        <collection property="members" ofType="com.demo.im.web.model.UserDO">
+            <id column="user_id" property="userId" />
+            <result column="nickname" property="nickname"/>
+            <result column="account" property="account"/>
+            <result column="avatar_url" property="avatarUrl"/>
+            <result column="phone" property="phone"/>
+            <result column="email" property="email"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectGroupAndMembers" resultMap="groupAndMembers" >
+        SELECT
+            ig.group_id ,
+            ig.group_name ,
+            ig.group_avatar_url,
+            igu.user_id,
+            iu.nickname,
+            iu.account ,
+            iu.avatar_url ,
+            iu.phone,
+            iu.email
+        FROM
+            im_group ig
+        join im_group_user igu on
+            ig.group_id = igu.group_id
+        join im_user iu on
+            iu.user_id = igu.user_id
+        WHERE ig.group_id = #{groupId}
+    </select>
+
+    <select id="selectGroupsByUser" resultType="com.demo.im.web.model.GroupDO">
+
+        SELECT
+            ig.group_id ,
+            ig.group_name ,
+            ig.group_avatar_url
+        FROM
+            im_group ig
+        join im_group_user igu on
+            igu.group_id = ig.group_id
+        WHERE
+            igu.user_id = #{userId}
+        GROUP BY
+            ig.group_id
+
+    </select>
+
+</mapper>

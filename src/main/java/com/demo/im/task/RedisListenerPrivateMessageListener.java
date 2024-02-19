@@ -25,7 +25,7 @@ import java.util.Map;
  */
 @Slf4j
 @Component
-public class RedisListenerMessageListener implements StreamListener<String, MapRecord<String,String,String>> {
+public class RedisListenerPrivateMessageListener implements StreamListener<String, MapRecord<String,String,String>> {
 
     @Autowired
     private RedisMqProperties redisMqProperties;

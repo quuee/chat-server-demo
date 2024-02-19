@@ -1,6 +1,6 @@
 package com.demo.im.config.redisConfig;
 
-import com.demo.im.task.RedisListenerMessageListener;
+import com.demo.im.task.RedisListenerPrivateMessageListener;
 import com.demo.im.util.RedisStreamUtil;
 import com.demo.im.util.ThreadPoolExecutorFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +31,7 @@ public class RedisStreamConfig {
     @Autowired
     private RedisMqProperties redisMqProperties;
     @Autowired
-    private RedisListenerMessageListener redisListenerMessageListener;
+    private RedisListenerPrivateMessageListener redisListenerPrivateMessageListener;
 
     @Bean
     public List<Subscription> subscription(LettuceConnectionFactory factory) {
@@ -69,7 +69,7 @@ public class RedisStreamConfig {
             Subscription subscription = listenerContainer.receive(
                     Consumer.from(redisMqGroupProperties.getName(), redisMqGroupProperties.getConsumers()[0]),
                     StreamOffset.create(streamName, ReadOffset.lastConsumed()),
-                    redisListenerMessageListener);
+                    redisListenerPrivateMessageListener);
             // 自动ask消息
             /*
            Subscription subscription = listenerContainer.receiveAutoAck(Consumer.from(redisMqGroup.getName(), redisMqGroup.getConsumers()[0]),

@@ -77,6 +77,7 @@ public class PrivateMessageProcessor extends AbstractMessageProcessor<IMMessageI
         String sendKey = String.join(":", IMRedisKey.IM_MESSAGE_PRIVATE_UNREAD_QUEUE,recvInfo.getReceivers().get(0).getUserId().toString(),IMTerminalType.APP.code().toString());
         // 存入redis 等待拉取推送
         redisTemplate.opsForList().rightPush(sendKey, recvInfo);
+        // 如果后续消息太多存入数据库
 
     }
 

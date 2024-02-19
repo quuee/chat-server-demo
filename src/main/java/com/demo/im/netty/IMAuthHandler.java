@@ -96,6 +96,7 @@ public class IMAuthHandler extends ChannelInboundHandlerAdapter {
             String key = String.join(":", IMRedisKey.IM_USER_SERVER_ID, userId.toString(), terminal.toString());
             redisTemplate.opsForValue().set(key, IMServersLaunch.serverId, IMConstant.ONLINE_TIMEOUT_SECOND, TimeUnit.SECONDS);
 
+            // 该连接去除验证handler
             ctx.pipeline().remove(this);
 
             // 响应ws
