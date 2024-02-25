@@ -17,6 +17,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -36,7 +38,11 @@ public class GroupMessageProcessor extends AbstractMessageProcessor<IMMessageInf
         IMUserInfo sender = recvInfo.getSender();
         List<IMUserInfo> receivers = recvInfo.getReceivers();
         log.info("接收到群消息，发送者:{},接收用户数量:{}，内容:{}", sender.getUserId(), receivers.size(), recvInfo.getContent());
-        for (IMUserInfo receiver : receivers) {
+
+        // 将发送者摘除
+        List<IMUserInfo> realReceiversList = receivers.stream().filter(item -> !Objects.equals(item.getUserId(), sender.getUserId())).toList();
+
+        for (IMUserInfo receiver : realReceiversList) {
             try {
                 ChannelHandlerContext channelCtx = UserChannelCtxMap.getChannelCtx(receiver.getUserId(), receiver.getTerminal());
                 if (channelCtx != null) {

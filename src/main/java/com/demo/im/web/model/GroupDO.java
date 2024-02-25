@@ -18,8 +18,11 @@ public class GroupDO {
     @TableField("group_name")
     private String groupName;
 
-    @TableField("group_avatar_url")
-    private String groupAvatarUrl;
+    @TableField("conversation_thumb")
+    private String conversationThumb;
+
+    @TableField("owner_id")
+    private String ownerId;
 
     @TableField(exist = false)
     private List<UserDO> members;

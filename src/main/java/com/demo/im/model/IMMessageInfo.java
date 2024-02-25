@@ -13,6 +13,11 @@ public class IMMessageInfo {
     private Integer conversationType;
 
     /**
+     * 如果空为-1
+     */
+    private Long groupId;
+
+    /**
      * 发送方
      */
     private IMUserInfo sender;

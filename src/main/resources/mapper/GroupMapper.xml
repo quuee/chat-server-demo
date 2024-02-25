@@ -7,7 +7,8 @@
     <resultMap id="groupAndMembers" type="com.demo.im.web.model.GroupDO">
         <id column="group_id" property="groupId"/>
         <result column="group_name" property="groupName"/>
-        <result column="group_avatar_url" property="groupAvatarUrl"/>
+        <result column="conversation_thumb" property="conversationThumb"/>
+        <result column="owner_id" property="ownerId"/>
         <collection property="members" ofType="com.demo.im.web.model.UserDO">
             <id column="user_id" property="userId" />
             <result column="nickname" property="nickname"/>
@@ -22,7 +23,8 @@
         SELECT
             ig.group_id ,
             ig.group_name ,
-            ig.group_avatar_url,
+            ig.conversation_thumb,
+            ig.owner_id,
             igu.user_id,
             iu.nickname,
             iu.account ,
@@ -43,7 +45,8 @@
         SELECT
             ig.group_id ,
             ig.group_name ,
-            ig.group_avatar_url
+            ig.conversation_thumb ,
+            ig.owner_id
         FROM
             im_group ig
         join im_group_user igu on
