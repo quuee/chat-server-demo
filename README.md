@@ -1,6 +1,6 @@
 
 ## chat-server-demo
-flutter_chat_demo的服务端  
+flutter_chat_demo app server
 springboot + netty
 
 ### channelHandler生命周期
