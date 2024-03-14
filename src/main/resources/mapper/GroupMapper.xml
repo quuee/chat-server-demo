@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.demo.im.web.dao.GroupDOMapper">
+<mapper namespace="cn.quuee.chatServer.web.dao.GroupDOMapper">
 
     <!-- 群 成员 一对多 -->
-    <resultMap id="groupAndMembers" type="com.demo.im.web.model.GroupDO">
+    <resultMap id="groupAndMembers" type="cn.quuee.chatServer.web.model.GroupDO">
         <id column="group_id" property="groupId"/>
         <result column="group_name" property="groupName"/>
         <result column="conversation_thumb" property="conversationThumb"/>
         <result column="owner_id" property="ownerId"/>
-        <collection property="members" ofType="com.demo.im.web.model.UserDO">
+        <collection property="members" ofType="cn.quuee.chatServer.web.model.UserDO">
             <id column="user_id" property="userId" />
             <result column="nickname" property="nickname"/>
             <result column="account" property="account"/>
@@ -40,7 +40,7 @@
         WHERE ig.group_id = #{groupId}
     </select>
 
-    <select id="selectGroupsByUser" resultType="com.demo.im.web.model.GroupDO">
+    <select id="selectGroupsByUser" resultType="cn.quuee.chatServer.web.model.GroupDO">
 
         SELECT
             ig.group_id ,
