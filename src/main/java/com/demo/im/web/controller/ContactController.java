@@ -31,6 +31,12 @@ public class ContactController {
 
     }
 
+    @RequestMapping(value = "value",method = RequestMethod.GET)
+    public Result<UserDO> one(Long contactId){
+        UserDO byId = userService.getById(contactId);
+        return Result.ok(byId);
+    }
+
     // 编辑联系人信息
 
 }
