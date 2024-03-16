@@ -2,7 +2,7 @@ package cn.quuee.chatServer.netty.processor;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.quuee.chatServer.common.enums.IMConversationType;
-import cn.quuee.chatServer.common.enums.IMTerminalType;
+import cn.quuee.chatServer.common.enums.IMClientType;
 import cn.quuee.chatServer.model.IMMessageInfo;
 import cn.quuee.chatServer.model.IMMessageWrapper;
 import cn.quuee.chatServer.model.IMUserInfo;
@@ -77,7 +77,7 @@ public class PrivateMessageProcessor extends AbstractMessageProcessor<IMMessageI
 //        }
 
         // 思路1：按用户id为key存储未读消息，当用户登录时 用消息中间件 通知用户所在的服务器推送消息
-        String sendKey = String.join(":", IMRedisKey.IM_MESSAGE_PRIVATE_UNREAD_QUEUE,recvInfo.getReceivers().get(0).getUserId().toString(), IMTerminalType.APP.code().toString());
+        String sendKey = String.join(":", IMRedisKey.IM_MESSAGE_PRIVATE_UNREAD_QUEUE,recvInfo.getReceivers().get(0).getUserId().toString(), IMClientType.APP.code().toString());
         // 存入redis 等待拉取推送
         redisTemplate.opsForList().rightPush(sendKey, recvInfo);
         // 如果后续消息太多存入数据库

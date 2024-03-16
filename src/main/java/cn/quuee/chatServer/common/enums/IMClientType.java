@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
-public enum IMTerminalType {
+public enum IMClientType {
 
     /**
      * web
@@ -27,8 +27,8 @@ public enum IMTerminalType {
     private final String desc;
 
 
-    public static IMTerminalType fromCode(Integer code) {
-        for (IMTerminalType typeEnum : values()) {
+    public static IMClientType fromCode(Integer code) {
+        for (IMClientType typeEnum : values()) {
             if (typeEnum.code.equals(code)) {
                 return typeEnum;
             }
@@ -37,7 +37,7 @@ public enum IMTerminalType {
     }
 
     public static List<Integer> codes() {
-        return Arrays.stream(values()).map(IMTerminalType::code).collect(Collectors.toList());
+        return Arrays.stream(values()).map(IMClientType::code).collect(Collectors.toList());
     }
 
     public Integer code() {

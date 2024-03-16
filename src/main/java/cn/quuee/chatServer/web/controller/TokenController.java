@@ -1,7 +1,7 @@
 package cn.quuee.chatServer.web.controller;
 
 import cn.quuee.chatServer.common.Result;
-import cn.quuee.chatServer.common.enums.IMTerminalType;
+import cn.quuee.chatServer.common.enums.IMClientType;
 import cn.quuee.chatServer.util.JwtClaimsSetUtil;
 import cn.quuee.chatServer.web.model.UserDO;
 import cn.quuee.chatServer.web.service.UserService;
@@ -43,7 +43,7 @@ public class TokenController {
             return Result.error("can not found user");
         }
 
-        SignedJWT signedJWT = new SignedJWT(new JWSHeader.Builder(JWSAlgorithm.RS256).type(JOSEObjectType.JWT).build(), jwtClaimsSetUtil.buildJWTClaimsSet(user.getUserId().toString(), IMTerminalType.APP.code()));
+        SignedJWT signedJWT = new SignedJWT(new JWSHeader.Builder(JWSAlgorithm.RS256).type(JOSEObjectType.JWT).build(), jwtClaimsSetUtil.buildJWTClaimsSet(user.getUserId().toString(), IMClientType.APP.code()));
         signedJWT.sign(rsaSigner);
         String result = signedJWT.serialize();
         log.info("token is: {}" , result);
